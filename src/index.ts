@@ -39,7 +39,7 @@ interface ExtensionOptions {
 }
 
 /**
- * @param extensionReference Extension or extensions to install
+ * @param extensionReference Extension or extensions to install: provided reference, Chrome Extension id, or URL to .crx
  * @param options Installation options
  * @returns A promise resolving with the name or names of the extensions installed
  */
