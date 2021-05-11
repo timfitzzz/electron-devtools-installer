@@ -2,7 +2,13 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as rimraf from 'rimraf';
 
-import { getPath, downloadFile, changePermissions, removeUnsupportedManifestKeys, removeUnsupportedFolders } from './utils';
+import {
+  getPath,
+  downloadFile,
+  changePermissions,
+  removeUnsupportedManifestKeys,
+  removeUnsupportedFolders,
+} from './utils';
 
 const unzip: any = require('unzip-crx-3');
 
