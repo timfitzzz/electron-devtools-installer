@@ -37,3 +37,43 @@ export const changePermissions = (dir: string, mode: string | number) => {
     }
   });
 };
+
+export const removeUnsupportedManifestKeys: (extensionFolderPath: string) => void = (
+  extensionFolderPath: string,
+) => {
+  let manifest = JSON.parse(
+    fs.readFileSync(extensionFolderPath + '/manifest.json', { encoding: 'utf8' }),
+  );
+  fs.writeFileSync(
+    extensionFolderPath + '/manifest.json',
+    JSON.stringify(
+      Object.getOwnPropertyNames(manifest).reduce((acc, propName) => {
+        if ([
+            'update_url',
+            'browser_action',
+            'minimum_chrome_version'
+            ].indexOf(propName) > -1) {
+          return acc;
+        }
+        else {
+          return { ...acc, [propName]: manifest[propName] };
+        }
+      }, {}),
+    ),
+  );
+};
+
+export const removeUnsupportedFolders: (extensionFolderPath: string) => void = (
+  extensionFolderPath: string,
+) => {
+  let folderContents = fs.readdirSync(extensionFolderPath, { encoding: 'utf8', withFileTypes: true })
+  folderContents.forEach((dirEnt: fs.Dirent) => {
+    if (dirEnt.isDirectory() && ([
+      '_metadata'
+    ].indexOf(dirEnt.name) > -1)) {
+      fs.rmdirSync(`${extensionFolderPath}/${dirEnt.name}`, {recursive: true})
+      console.log(`removed unsupported folder from ${extensionFolderPath}: ${dirEnt.name}`)
+    }
+  })
+
+}

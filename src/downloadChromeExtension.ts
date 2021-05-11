@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as rimraf from 'rimraf';
 
-import { getPath, downloadFile, changePermissions } from './utils';
+import { getPath, downloadFile, changePermissions, removeUnsupportedManifestKeys, removeUnsupportedFolders } from './utils';
 
 const unzip: any = require('unzip-crx-3');
 
@@ -44,6 +44,7 @@ const downloadChromeExtension = (
             .then(() => {
               changePermissions(extensionFolder, 755);
               removeUnsupportedManifestKeys(extensionFolder);
+              removeUnsupportedFolders(extensionFolder);
               resolve(extensionFolder);
             })
             .catch((err: Error) => {
@@ -67,27 +68,6 @@ const downloadChromeExtension = (
       resolve(extensionFolder);
     }
   });
-};
-
-const removeUnsupportedManifestKeys: (extensionFolderPath: string) => void = (
-  extensionFolderPath: string,
-) => {
-  let manifest = JSON.parse(
-    fs.readFileSync(extensionFolderPath + '/manifest.json', { encoding: 'utf8' }),
-  );
-  fs.writeFileSync(
-    extensionFolderPath + '/manifest.json',
-    JSON.stringify(
-      Object.getOwnPropertyNames(manifest).reduce((acc, propName) => {
-        switch (propName) {
-          case 'update_url':
-            return acc;
-          default:
-            return { ...acc, [propName]: manifest[propName] };
-        }
-      }, {}),
-    ),
-  );
 };
 
 export default downloadChromeExtension;
