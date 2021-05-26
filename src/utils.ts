@@ -48,7 +48,7 @@ export const removeUnsupportedManifestKeys: (extensionFolderPath: string) => voi
     extensionFolderPath + '/manifest.json',
     JSON.stringify(
       Object.getOwnPropertyNames(manifest).reduce((acc, propName) => {
-        if (['update_url', 'browser_action', 'minimum_chrome_version'].indexOf(propName) > -1) {
+        if (['update_url', 'browser_action', 'minimum_chrome_version', 'author'].indexOf(propName) > -1) {
           return acc;
         } else {
           return { ...acc, [propName]: manifest[propName] };
